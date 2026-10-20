@@ -32,7 +32,6 @@ function App() {
   return (
     <div className="site-shell">
       <Helmet>
-        <title>{business.name} | Wholesale Children's Fashion from Turkey</title>
         <meta name="description" content="Premium Turkish children's clothing wholesale for boutiques, retailers and distributors worldwide. Explore our collections and request wholesale details." />
         <meta name="keywords" content="wholesale children's clothing, kids clothing wholesale Turkey, Turkish children's clothing, children's fashion wholesale, kids dresses wholesale, wholesale kids fashion, children's clothing supplier Turkey, Istanbul kids clothing wholesale" />
         <meta name="theme-color" content="#f7f5f0" />
