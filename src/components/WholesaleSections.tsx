@@ -99,7 +99,7 @@ export function Collections() {
                   {product.fabric && <div><dt>{copy.fabric}</dt><dd>{product.fabric}</dd></div>}
                   <div><dt>{copy.colors}</dt><dd>{translateProduct(product, language).displayedColors}</dd></div>
                 </dl>
-                <a className="product-ask" href={whatsappUrl(language === 'ar' ? `مرحباً، أود الاستفسار عن ${translateProduct(product, language).name} (${product.modelCode}). يرجى تزويدي بسعر الجملة والتوفر الحالي.` : `Hello, I am interested in ${product.name} (${product.modelCode}). Please share its wholesale price and current availability.`)} target="_blank" rel="noopener noreferrer">{copy.ask} <ArrowUpRight size={16} /></a>
+                <a className="product-ask" href={whatsappUrl(language === 'ar' ? `مرحباً، أود الاستفسار عن ${translateProduct(product, language).name} (${product.modelCode}). يرجى تزويدي بسعر الجملة والتوفر الحالي.` : language === 'ru' ? `Здравствуйте! Меня интересует модель ${translateProduct(product, language).name} (${product.modelCode}). Пожалуйста, сообщите оптовую цену и наличие.` : `Hello, I am interested in ${product.name} (${product.modelCode}). Please share its wholesale price and current availability.`)} target="_blank" rel="noopener noreferrer">{copy.ask} <ArrowUpRight size={16} /></a>
                 <AddToCartDialog product={product} otherModelQuantity={cartLines.filter((line) => line.modelCode === product.modelCode).reduce((total, line) => total + Object.values(line.quantities).reduce((sum, quantity) => sum + quantity, 0), 0)} onSave={addLine} />
               </div>
             </article>
@@ -204,7 +204,7 @@ export function Contact() {
       <div className="page-width contact-layout">
         <div className="contact-copy"><p className="eyebrow"><span className="eyebrow-line" /> {copy.eyebrow}</p><h2>{copy.title}</h2><p className="section-intro">{copy.intro}</p>
           <div className="contact-details">
-            <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer"><span className="contact-icon"><MessageCircle size={18} /></span><span><small>WhatsApp</small><strong dir="ltr">{business.phone}</strong></span><ArrowUpRight size={15} /></a>
+            <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" aria-label={language === 'ar' ? 'تواصل معنا عبر واتساب' : language === 'ru' ? 'Связаться с нами в WhatsApp' : 'Contact us on WhatsApp'}><span className="contact-icon"><MessageCircle size={18} /></span><span><small>WhatsApp</small><strong dir="ltr">{business.phone}</strong></span><ArrowUpRight size={15} /></a>
             <a href={`tel:${business.phone.replace(/[^+\d]/g, '')}`}><span className="contact-icon"><Phone size={18} /></span><span><small>{copy.phone}</small><strong dir="ltr">{business.phone}</strong></span><ArrowUpRight size={15} /></a>
             <a href={`mailto:${business.email}`}><span className="contact-icon"><Mail size={18} /></span><span><small>{copy.email}</small><strong dir="ltr">{business.email}</strong></span><ArrowUpRight size={15} /></a>
             {business.facebookUrl && <a href={business.facebookUrl} target="_blank" rel="noopener noreferrer"><span className="contact-icon"><SocialIcon network="facebook" size={18} /></span><span><small>Facebook</small><strong>{copy.facebook}</strong></span><ArrowUpRight size={15} /></a>}

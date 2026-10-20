@@ -1,3 +1,5 @@
+import { whatsappUrl } from '../config/business'
+
 const navigation = [
   { label: 'Home', href: '#home' },
   { label: 'About', href: '#about' },
@@ -45,7 +47,7 @@ function Footer() {
               <h2 className="mb-5 text-[0.62rem] font-semibold uppercase tracking-[0.24em] text-[#d4ad6a]">Connect</h2>
               <ul className="space-y-3 text-sm">
                 <li><a href="https://instagram.com/sapore.restaurant" target="_blank" rel="noopener noreferrer" className="text-[#e7e0d3]/65 transition-colors hover:text-[#d4ad6a]">Instagram</a></li>
-                <li><a href="https://wa.me/905555555555" target="_blank" rel="noopener noreferrer" className="text-[#e7e0d3]/65 transition-colors hover:text-[#d4ad6a]">WhatsApp</a></li>
+                <li><a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="text-[#e7e0d3]/65 transition-colors hover:text-[#d4ad6a]">WhatsApp</a></li>
                 <li><a href="tel:+905555555555" className="text-[#e7e0d3]/65 transition-colors hover:text-[#d4ad6a]">+90 555 555 55 55</a></li>
               </ul>
             </div>

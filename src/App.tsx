@@ -3,6 +3,7 @@ import './editorial.css'
 import { business } from './config/business'
 import { readSiteLanguage } from './config/language'
 import Navbar from './components/Navbar'
+import FloatingWhatsApp from './components/FloatingWhatsApp'
 import Hero from './components/Hero'
 import SmartInquiry from './components/SmartInquiry'
 import { About, Collections, Benefits, Process, Wholesale, Social, Contact, Footer } from './components/WholesaleSections'
@@ -52,6 +53,7 @@ function App() {
   return (
     <div className="site-shell">
       <Navbar />
+      <FloatingWhatsApp />
       {isCartPage ? <><CartPage /><Footer /></> : <>
       <main>
         <Hero />

@@ -6,12 +6,12 @@ export const business = {
   logo: 'MINIK',
   tagline: "Children's fashion, thoughtfully made.",
   description: "A wholesale children's clothing partner in Istanbul, bringing considered design and dependable service to boutiques, retailers and distributors worldwide.",
-  whatsappNumber: '905551234567',
+  whatsappNumber: '905016506221',
   instagramUrl: '',
   facebookUrl: '',
   tiktokUrl: 'https://www.tiktok.com/',
   email: 'wholesale@example.com',
-  phone: '+90 555 123 45 67',
+  phone: '+90 501 650 62 21',
   location: 'Istanbul, Turkey',
   workingHours: 'Monday – Friday, 09:00 – 18:00 (TRT)',
 } as const
@@ -25,5 +25,6 @@ const wholesaleMessages = {
 }
 
 export function whatsappUrl(message = wholesaleMessages[readSiteLanguage()]) {
-  return `https://wa.me/${business.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`
+  const directChatUrl = `https://wa.me/${business.whatsappNumber.replace(/\D/g, '')}`
+  return message ? `${directChatUrl}?text=${encodeURIComponent(message)}` : directChatUrl
 }

@@ -1,3 +1,5 @@
+import { whatsappUrl } from '../config/business'
+
 type ContactIcon = 'whatsapp' | 'instagram' | 'phone'
 
 const contacts: Array<{
@@ -13,7 +15,7 @@ const contacts: Array<{
     title: 'WhatsApp',
     description: 'Chat with us and reserve your table.',
     action: 'Start a Conversation',
-    href: 'https://wa.me/905555555555',
+    href: whatsappUrl(),
     external: true,
   },
   {
