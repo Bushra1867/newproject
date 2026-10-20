@@ -29,8 +29,11 @@ jobs:
         run: npm ci
       - name: Build site
         run: npm run build
-      - name: Add GitHub Pages route fallback
-        run: cp dist/index.html dist/404.html
+      - name: Prepare GitHub Pages routes
+        run: |
+          mkdir -p dist/cart
+          cp dist/index.html dist/cart/index.html
+          cp dist/index.html dist/404.html
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact
