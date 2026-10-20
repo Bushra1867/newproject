@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from 'react'
 import { ArrowLeft, ArrowRight, Check, Search, Trash2 } from 'lucide-react'
 import { business, inquiryEndpoint, whatsappUrl } from '../config/business'
-import { readSiteLanguage } from '../config/language'
+import { readSiteLanguage, setSiteLanguage } from '../config/language'
 import { products } from '../data/products'
+import { translateColor, translateProduct } from '../data/productTranslations'
 import { useCart } from '../cart/useCart'
 import { formatSizeLabel, getLineQuantity } from '../cart/cartModel'
 import './SmartInquiry.css'
@@ -65,7 +66,7 @@ const initialAnswers: InquiryAnswers = {
 
 const copy: Record<Language, Record<string, string>> = {
   en: {
-    title: 'Wholesale inquiry', intro: 'Tell us what your business needs. Our team will have the details to prepare a useful reply.',
+    title: 'Wholesale inquiry', intro: 'Tell us what your business needs. Our team will have the details to prepare a useful reply.', language: 'Language', englishLanguage: 'English', arabicLanguage: 'Arabic', russianLanguage: 'Russian',
     step: 'Step', customerStep: 'Your details', typeStep: 'Inquiry type', productStep: 'Products', requirementsStep: 'Order requirements', reviewStep: 'Review & send',
     customerTitle: 'Let’s get to know your business', fullName: 'Full name', company: 'Company or store name', country: 'Country', contactMethod: 'Preferred contact method', whatsapp: 'WhatsApp number', phoneNumber: 'Phone number', email: 'Email address (optional)', phone: 'Phone', methodWhatsApp: 'WhatsApp', methodEmail: 'Email', methodPhone: 'Phone',
     typesTitle: 'What can we help you with?', chooseTypes: 'Choose one or more', prices: 'Request wholesale prices', model: 'Ask about a specific model', catalog: 'Request the complete product catalog', sizes: 'Ask about available sizes and colors', minimum: 'Ask about minimum order quantities', shipping: 'Ask about shipping and delivery', custom: 'Manufacturing or custom production', other: 'Other inquiry',
@@ -75,7 +76,7 @@ const copy: Record<Language, Record<string, string>> = {
     completeProductDetails: 'Add requested sizes and quantities for each selected model to request prices.', phoneRequired: 'Enter a phone number for your preferred contact method.', invalidQuantity: 'Enter a whole-number quantity greater than zero.', yes: 'Yes', no: 'No',
   },
   ar: {
-    title: 'استفسار بيع بالجملة', intro: 'أخبرنا باحتياجات نشاطك التجاري لنتمكن من إعداد رد مناسب.',
+    title: 'استفسار بيع بالجملة', intro: 'أخبرنا باحتياجات نشاطك التجاري لنتمكن من إعداد رد مناسب.', language: 'اللغة', englishLanguage: 'الإنجليزية', arabicLanguage: 'العربية', russianLanguage: 'الروسية',
     step: 'الخطوة', customerStep: 'بياناتك', typeStep: 'نوع الاستفسار', productStep: 'المنتجات', requirementsStep: 'متطلبات الطلب', reviewStep: 'المراجعة والإرسال',
     customerTitle: 'لنتعرف على نشاطك التجاري', fullName: 'الاسم الكامل', company: 'اسم الشركة أو المتجر', country: 'الدولة', contactMethod: 'وسيلة التواصل المفضلة', whatsapp: 'رقم واتساب', phoneNumber: 'رقم الهاتف', email: 'البريد الإلكتروني (اختياري)', phone: 'الهاتف', methodWhatsApp: 'واتساب', methodEmail: 'البريد الإلكتروني', methodPhone: 'الهاتف',
     typesTitle: 'كيف يمكننا مساعدتك؟', chooseTypes: 'اختر خياراً واحداً أو أكثر', prices: 'طلب أسعار الجملة', model: 'السؤال عن موديل محدد', catalog: 'طلب كتالوج المنتجات الكامل', sizes: 'السؤال عن المقاسات والألوان المتاحة', minimum: 'السؤال عن الحد الأدنى للطلب', shipping: 'السؤال عن الشحن والتوصيل', custom: 'التصنيع أو الإنتاج حسب الطلب', other: 'استفسار آخر',
@@ -85,7 +86,7 @@ const copy: Record<Language, Record<string, string>> = {
     completeProductDetails: 'يرجى تحديد المقاسات والكميات لكل موديل لطلب الأسعار.', phoneRequired: 'يرجى إدخال رقم الهاتف للتواصل بهذه الوسيلة.', invalidQuantity: 'يرجى إدخال كمية صحيحة أكبر من صفر.', yes: 'نعم', no: 'لا',
   },
   ru: {
-    title: 'Оптовый запрос', intro: 'Расскажите о потребностях вашего бизнеса, чтобы мы подготовили точный ответ.',
+    title: 'Оптовый запрос', intro: 'Расскажите о потребностях вашего бизнеса, чтобы мы подготовили точный ответ.', language: 'Язык', englishLanguage: 'Английский', arabicLanguage: 'Арабский', russianLanguage: 'Русский',
     step: 'Шаг', customerStep: 'Ваши данные', typeStep: 'Тема запроса', productStep: 'Товары', requirementsStep: 'Параметры заказа', reviewStep: 'Проверка и отправка',
     customerTitle: 'Расскажите о вашей компании', fullName: 'Полное имя', company: 'Название компании или магазина', country: 'Страна', contactMethod: 'Предпочитаемый способ связи', whatsapp: 'Номер WhatsApp', phoneNumber: 'Номер телефона', email: 'Электронная почта (необязательно)', phone: 'Телефон', methodWhatsApp: 'WhatsApp', methodEmail: 'Электронная почта', methodPhone: 'Телефон',
     typesTitle: 'Чем мы можем помочь?', chooseTypes: 'Выберите один или несколько вариантов', prices: 'Запросить оптовые цены', model: 'Узнать о конкретной модели', catalog: 'Запросить полный каталог', sizes: 'Узнать о доступных размерах и цветах', minimum: 'Узнать о минимальном заказе', shipping: 'Узнать о доставке', custom: 'Производство или индивидуальный пошив', other: 'Другой вопрос',
@@ -124,11 +125,11 @@ function SmartInquiry() {
   const filteredProducts = useMemo(() => {
     const term = search.trim().toLowerCase()
     if (!term) return products
-    return products.filter((product) => `${product.name} ${product.modelCode} ${product.category}`.toLowerCase().includes(term))
-  }, [search])
+    return products.filter((product) => `${product.name} ${translateProduct(product, language).name} ${product.modelCode} ${translateProduct(product, language).categoryLabel}`.toLowerCase().includes(term))
+  }, [language, search])
 
   const selectedProducts = products.filter((product) => answers.selectedProducts[product.modelCode])
-  const selectedLabels = answers.inquiryTypes.map((item) => t[item]).join(', ')
+  const selectedLabels = answers.inquiryTypes.map((item) => t[item]).join(language === 'ar' ? '، ' : ', ')
   const collectionOnly = answers.selectionMode === 'collection'
   const needsModels = answers.inquiryTypes.some((item) => modelRequired.includes(item))
   const asksPrices = answers.inquiryTypes.includes('prices')
@@ -157,13 +158,13 @@ function SmartInquiry() {
     for (const line of cartLines) {
       const product = products.find((item) => item.modelCode === line.modelCode)
       if (!product) continue
-      const sizeSummary = Object.entries(line.quantities).map(([size, quantity]) => `${formatSizeLabel(size, language)}: ${quantity}`).join(', ')
+      const sizeSummary = Object.entries(line.quantities).map(([size, quantity]) => `${formatSizeLabel(size, language)}: ${quantity}`).join('، ')
       const previous = imported[line.modelCode]
       const existingSizes = previous?.sizes ? `${previous.sizes}; ` : ''
       imported[line.modelCode] = {
-        sizes: `${existingSizes}${line.color ? `${line.color} — ` : ''}${sizeSummary}`,
+        sizes: `${existingSizes}${line.color ? `${translateColor(line.color, language)} — ` : ''}${sizeSummary}`,
         quantity: String(Number(previous?.quantity ?? 0) + getLineQuantity(line)),
-        variantSummary: [previous?.variantSummary, `${line.color}${line.notes ? ` (${line.notes})` : ''}`].filter(Boolean).join(', '),
+        variantSummary: [previous?.variantSummary, `${translateColor(line.color, language)}${line.notes ? ` (${line.notes})` : ''}`].filter(Boolean).join('، '),
       }
     }
     if (Object.keys(imported).length === 0) return
@@ -188,10 +189,7 @@ function SmartInquiry() {
   function changeLanguage(value: Language) {
     setLanguage(value)
     setError('')
-    const direction = value === 'ar' ? 'rtl' : 'ltr'
-    document.documentElement.lang = value
-    document.documentElement.dir = direction
-    window.dispatchEvent(new CustomEvent('site-language-change', { detail: value.toUpperCase() }))
+    setSiteLanguage(value)
   }
 
   function validateStep(currentStep: number) {
@@ -335,8 +333,8 @@ function SmartInquiry() {
       `${t.inquiry}: ${selectedLabels}`,
       `${t.products}: ${collectionOnly ? t.allCollection : selectedProducts.length ? selectedProducts.map((product) => {
         const selection = answers.selectedProducts[product.modelCode]
-        return `${product.modelCode}${selection.variantSummary ? `, ${t.availableColors}: ${selection.variantSummary}` : ''}${selection.sizes ? `, ${t.sizesFor}: ${selection.sizes}` : ''}${selection.quantity ? `, ${t.quantityFor}: ${selection.quantity}` : ''}`
-      }).join('; ') : t.noModels}`,
+        return `${product.modelCode}${selection.variantSummary ? `، ${t.availableColors}: ${selection.variantSummary}` : ''}${selection.sizes ? `، ${t.sizesFor}: ${selection.sizes}` : ''}${selection.quantity ? `، ${t.quantityFor}: ${selection.quantity}` : ''}`
+      }).join('؛ ') : t.noModels}`,
       `${t.contact}: ${getContactMethodLabel()} · ${answers.contactMethod === 'email' ? answers.email : answers.contactMethod === 'phone' ? answers.phoneNumber : answers.whatsapp}`,
     ]
     const requirements = getRequirements()
@@ -400,11 +398,11 @@ function SmartInquiry() {
             <p>{t.intro}</p>
           </div>
           <label className="smart-language">
-            <span className="sr-only">Language</span>
-            <select value={language} onChange={(event) => changeLanguage(event.target.value as Language)} aria-label="Language">
-              <option value="en">English</option>
-              <option value="ar">العربية</option>
-              <option value="ru">Русский</option>
+            <span className="sr-only">{t.language}</span>
+            <select value={language} onChange={(event) => changeLanguage(event.target.value as Language)} aria-label={t.language}>
+              <option value="en">{t.englishLanguage}</option>
+              <option value="ar">{t.arabicLanguage}</option>
+              <option value="ru">{t.russianLanguage}</option>
             </select>
           </label>
         </header>
@@ -465,8 +463,8 @@ function SmartInquiry() {
                 {filteredProducts.map((product) => {
                   const selected = Boolean(answers.selectedProducts[product.modelCode])
                   return <article className={`smart-product ${selected ? 'selected' : ''}`} key={product.modelCode}>
-                    <img src={product.image} alt={product.imageAlt} loading="lazy" />
-                    <div className="smart-product-content"><span className="smart-model">{product.modelCode}</span><h4>{product.name}</h4><p>{t.availableSizes}: {product.sizes}<br />{t.availableColors}: {product.colors}</p><button type="button" className={selected ? 'smart-small-button remove' : 'smart-small-button'} onClick={() => toggleProduct(product.modelCode)}>{selected ? <><Trash2 size={15} /> {t.remove}</> : <><Check size={15} /> {t.add}</>}</button></div>
+                    <img src={product.image} alt={translateProduct(product, language).imageAlt} loading="lazy" />
+                    <div className="smart-product-content"><span className="smart-model" dir="ltr">{product.modelCode}</span><h4>{translateProduct(product, language).name}</h4><p>{t.availableSizes}: {translateProduct(product, language).sizes}<br />{t.availableColors}: {translateProduct(product, language).displayedColors}</p><button type="button" className={selected ? 'smart-small-button remove' : 'smart-small-button'} onClick={() => toggleProduct(product.modelCode)}>{selected ? <><Trash2 size={15} /> {t.remove}</> : <><Check size={15} /> {t.add}</>}</button></div>
                   </article>
                 })}
               </div>
@@ -474,8 +472,8 @@ function SmartInquiry() {
             </>}
             {selectedProducts.length > 0 && <div className="smart-selected-products"><h4>{t.selected}</h4>
               {selectedProducts.map((product) => <div className="smart-selected-item" key={product.modelCode}>
-                <strong>{product.modelCode} · {product.name}</strong>
-                <span>{t.availableSizes}: {product.sizes} · {t.availableColors}: {product.colors}</span>
+                <strong><bdi dir="ltr">{product.modelCode}</bdi> · {translateProduct(product, language).name}</strong>
+                <span>{t.availableSizes}: {translateProduct(product, language).sizes} · {t.availableColors}: {translateProduct(product, language).displayedColors}</span>
                 <div className="smart-fields-grid">
                   <label className="smart-field"><span>{t.sizesFor} · {product.modelCode}</span><input value={answers.selectedProducts[product.modelCode].sizes} placeholder={t.sizesPlaceholder} maxLength={80} onChange={(event) => updateProduct(product.modelCode, 'sizes', event.target.value)} /></label>
                   <label className="smart-field"><span>{t.quantityFor} · {product.modelCode}</span><input type="number" min="1" max="1000000" inputMode="numeric" value={answers.selectedProducts[product.modelCode].quantity} placeholder="0" onChange={(event) => updateProduct(product.modelCode, 'quantity', event.target.value.replace(/\D/g, '').slice(0, 7))} /></label>
@@ -512,7 +510,7 @@ function SmartInquiry() {
               <article><h4>{t.inquiry}</h4><p>{selectedLabels || t.none}</p></article>
               <article><h4>{t.products}</h4><p>{collectionOnly ? t.allCollection : selectedProducts.length ? selectedProducts.map((product) => {
                 const selection = answers.selectedProducts[product.modelCode]
-                return `${product.modelCode} — ${product.name}${selection.variantSummary ? `; ${t.availableColors}: ${selection.variantSummary}` : ''}${selection.sizes ? `; ${t.sizesFor}: ${selection.sizes}` : ''}${selection.quantity ? `; ${t.quantityFor}: ${selection.quantity}` : ''}`
+                return `${product.modelCode} — ${translateProduct(product, language).name}${selection.variantSummary ? `؛ ${t.availableColors}: ${selection.variantSummary}` : ''}${selection.sizes ? `؛ ${t.sizesFor}: ${selection.sizes}` : ''}${selection.quantity ? `؛ ${t.quantityFor}: ${selection.quantity}` : ''}`
               }).join(' · ') : t.noModels}</p></article>
               <article><h4>{t.order}</h4><p>{getRequirements().join('\n') || t.none}</p></article>
               <article><h4>{t.contact}</h4><p>{getContactMethodLabel()} · {answers.contactMethod === 'email' ? answers.email : answers.contactMethod === 'phone' ? answers.phoneNumber : answers.whatsapp}</p></article>

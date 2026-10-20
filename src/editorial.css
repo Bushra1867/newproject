@@ -6,6 +6,7 @@
   background: var(--color-background);
   font-optical-sizing: auto;
   --font-body: 'Manrope', 'IBM Plex Sans Arabic', sans-serif;
+  --font-arabic: 'IBM Plex Sans Arabic', 'Manrope', sans-serif;
   --font-editorial: 'Cormorant Garamond', Georgia, serif;
   --type-display: clamp(48px, 6.4vw, 88px);
   --type-page-heading: clamp(38px, 5vw, 58px);
@@ -50,7 +51,17 @@
 
 html { font-family: var(--font-body); }
 html[lang="ar"] {
-  --font-editorial: 'IBM Plex Sans Arabic', sans-serif;
+  --font-body: var(--font-arabic);
+  --font-editorial: var(--font-arabic);
+  --type-display: clamp(40px, 5.8vw, 76px);
+  --type-page-heading: clamp(32px, 4.6vw, 54px);
+  --type-section-heading: clamp(34px, 4.2vw, 56px);
+  --type-body: 15px;
+  --type-label: 13px;
+  --type-button: 12px;
+  --type-validation: 13px;
+  --line-height-body: 1.85;
+  --line-height-heading: 1.45;
   letter-spacing: 0;
 }
 html[lang="ar"], html[lang="ar"] body, html[lang="ar"] button, html[lang="ar"] input, html[lang="ar"] textarea, html[lang="ar"] select {
@@ -280,6 +291,95 @@ img { height: auto; }
 [dir="rtl"] .about-grid, [dir="rtl"] .social-layout, [dir="rtl"] .process-layout, [dir="rtl"] .contact-layout { direction: rtl; }
 [dir="rtl"] .product-title-row { flex-direction: row; }
 [dir="rtl"] .gallery-previous, [dir="rtl"] .gallery-next { transform: translateY(-50%); }
+
+html[lang="ar"] {
+  text-align: start;
+  letter-spacing: 0;
+}
+
+html[lang="ar"] :is(h1, h2, h3, h4, p, a, button, label, input, select, textarea, small, strong, dt, dd, li, span) {
+  letter-spacing: 0;
+}
+
+html[lang="ar"] :is(.hero-copy h1, .section-heading h2, .wholesale-content h2, .smart-inquiry-heading h2, .smart-step h3, .cart-page-header h1, .cart-config-header h2) {
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+html[lang="ar"] .hero-copy h1 {
+  max-width: 760px;
+  font-size: var(--type-display);
+}
+
+html[lang="ar"] .hero-description,
+html[lang="ar"] .section-intro,
+html[lang="ar"] .section-sidecopy,
+html[lang="ar"] .about-details,
+html[lang="ar"] .wholesale-content > p:not(.eyebrow),
+html[lang="ar"] .smart-hint,
+html[lang="ar"] .smart-review p {
+  line-height: 1.9;
+}
+
+html[lang="ar"] .eyebrow,
+html[lang="ar"] .brand-name,
+html[lang="ar"] .brand-name small {
+  letter-spacing: 0;
+}
+
+html[lang="ar"] .brand-name small {
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+html[lang="ar"] .hero-actions,
+html[lang="ar"] .smart-form-actions,
+html[lang="ar"] .cart-summary-actions,
+html[lang="ar"] .cart-line-bottom {
+  flex-wrap: wrap;
+}
+
+html[lang="ar"] .text-link svg,
+html[lang="ar"] .product-ask svg,
+html[lang="ar"] .hero-actions svg,
+html[lang="ar"] .contact-inquiry-card svg,
+html[lang="ar"] .cart-inquiry-link svg {
+  transform: scaleX(-1);
+}
+
+html[lang="ar"] .hero-index,
+html[lang="ar"] .benefit-index,
+html[lang="ar"] .product-title-row > span,
+html[lang="ar"] .smart-model,
+html[lang="ar"] .cart-line-heading > div > span,
+html[lang="ar"] .gallery-model,
+html[lang="ar"] .cart-size-row input,
+html[lang="ar"] .smart-field input[type="number"] {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+html[lang="ar"] .contact-details strong[dir="ltr"],
+html[lang="ar"] .footer-email[dir="ltr"],
+html[lang="ar"] .cart-size-row input[dir="ltr"] {
+  text-align: left;
+}
+
+@media (max-width: 780px) {
+  html[lang="ar"] .hero-copy h1 { font-size: clamp(38px, 8.5vw, 62px); }
+  html[lang="ar"] .hero-copy { max-width: 100%; }
+  html[lang="ar"] .smart-progress-step small { overflow-wrap: anywhere; }
+}
+
+@media (max-width: 560px) {
+  html[lang="ar"] .hero-copy h1 { font-size: clamp(34px, 9vw, 52px); line-height: 1.5; }
+  html[lang="ar"] .section-heading h2,
+  html[lang="ar"] .wholesale-content h2 { font-size: clamp(32px, 8.5vw, 46px); }
+  html[lang="ar"] .hero-bottomline { align-items: flex-start; }
+  html[lang="ar"] .hero-bottomline span { max-width: 70%; }
+  html[lang="ar"] .footer-main { text-align: start; }
+  html[lang="ar"] .cart-page-header { align-items: stretch; }
+}
 
 @media (min-width: 1380px) {
   .product-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }

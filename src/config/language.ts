@@ -9,3 +9,14 @@ export function readSiteLanguage(): SiteLanguage {
   }
   return value === 'ar' || value === 'ru' ? value : 'en'
 }
+
+export function setSiteLanguage(language: SiteLanguage) {
+  document.documentElement.lang = language
+  document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr'
+  try {
+    window.localStorage.setItem('minik-language', language.toUpperCase())
+  } catch {
+    // The language still applies for this page when storage is unavailable.
+  }
+  window.dispatchEvent(new CustomEvent('site-language-change', { detail: language.toUpperCase() }))
+}

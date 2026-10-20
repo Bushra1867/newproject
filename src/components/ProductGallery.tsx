@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, Maximize2, X } from 'lucide-react'
 import { readSiteLanguage } from '../config/language'
 import type { Product } from '../data/products'
+import { translateProduct } from '../data/productTranslations'
 import AddToCartDialog from '../cart/AddToCartDialog'
 import { useCart } from '../cart/useCart'
 
@@ -21,6 +22,7 @@ export default function ProductGallery({ product }: { product: Product }) {
   const [zoomed, setZoomed] = useState(false)
   const [imageFailed, setImageFailed] = useState(false)
   const t = labels[language]
+  const localizedProduct = translateProduct(product, language)
   const views: GalleryView[] = [
     { key: 'catalog', label: t.catalog, src: product.image },
     { key: 'front', label: t.front, src: product.views?.front },
@@ -69,16 +71,16 @@ export default function ProductGallery({ product }: { product: Product }) {
 
   return (
     <>
-      <button className="product-gallery-trigger" type="button" onClick={openGallery} aria-label={`${t.open}: ${product.name}`}>
-        <img src={product.image} alt={product.imageAlt} loading="lazy" />
+      <button className="product-gallery-trigger" type="button" onClick={openGallery} aria-label={`${t.open}: ${localizedProduct.name}`}>
+        <img src={product.image} alt={localizedProduct.imageAlt} loading="lazy" />
         <span>{t.open}</span>
       </button>
-      <dialog className="gallery-dialog" ref={dialogRef} aria-label={`${t.open}: ${product.name}`} onClick={(event) => {
+      <dialog className="gallery-dialog" ref={dialogRef} aria-label={`${t.open}: ${localizedProduct.name}`} onClick={(event) => {
         if (event.target === dialogRef.current) dialogRef.current?.close()
       }} onClose={() => setZoomed(false)}>
         <div className="gallery-content" dir={language === 'ar' ? 'rtl' : 'ltr'}>
           <header className="gallery-header">
-            <div><span className="gallery-model">{product.modelCode}</span><h2>{product.name}</h2></div>
+            <div><span className="gallery-model" dir="ltr">{product.modelCode}</span><h2>{localizedProduct.name}</h2></div>
             <div className="gallery-header-actions">
               <AddToCartDialog product={product} otherModelQuantity={lines.filter((line) => line.modelCode === product.modelCode).reduce((sum, line) => sum + Object.values(line.quantities).reduce((total, quantity) => total + quantity, 0), 0)} onSave={addLine} />
               <button type="button" className="gallery-icon-button" onClick={() => dialogRef.current?.close()} aria-label={t.close}><X size={20} /></button>
@@ -86,7 +88,7 @@ export default function ProductGallery({ product }: { product: Product }) {
           </header>
           <div className="gallery-stage">
             {current?.src && !imageFailed
-              ? <img className={zoomed ? 'gallery-main-image zoomed' : 'gallery-main-image'} src={current.src} alt={`${product.name} — ${current.label}`} onError={() => setImageFailed(true)} />
+              ? <img className={zoomed ? 'gallery-main-image zoomed' : 'gallery-main-image'} src={current.src} alt={`${localizedProduct.name} — ${current.label}`} onError={() => setImageFailed(true)} />
               : <div className="gallery-missing" role="status">{t.unavailable}</div>}
             <button type="button" className="gallery-icon-button gallery-zoom" onClick={() => setZoomed((value) => !value)} aria-label={t.zoom} aria-pressed={zoomed}><Maximize2 size={18} /></button>
             {availableViews.length > 1 && <>

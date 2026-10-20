@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
-import { Helmet } from 'react-helmet-async'
 import './editorial.css'
 import { business } from './config/business'
+import { readSiteLanguage } from './config/language'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import SmartInquiry from './components/SmartInquiry'
@@ -14,6 +14,23 @@ function App() {
   const isCartPage = currentRoutePath() === '/cart'
 
   useEffect(() => {
+    const updateMetadata = (language: ReturnType<typeof readSiteLanguage>) => {
+      const metadata = {
+        en: { title: `${business.name} | Wholesale Children's Fashion from Turkey`, description: 'Premium Turkish children’s clothing wholesale for boutiques, retailers and distributors worldwide. Explore our collections and request wholesale details.' },
+        ar: { title: `${business.name} | أزياء أطفال تركية بالجملة`, description: 'ملابس أطفال تركية راقية للبيع بالجملة للمتاجر والبوتيكات والموزعين حول العالم. اكتشفوا مجموعاتنا واطلبوا تفاصيل الجملة.' },
+        ru: { title: `${business.name} | Детская одежда оптом из Турции`, description: 'Качественная детская одежда из Турции оптом для бутиков, магазинов и дистрибьюторов по всему миру.' },
+      }[language]
+      document.title = metadata.title
+      document.querySelector('meta[name="description"]')?.setAttribute('content', metadata.description)
+      document.querySelector('meta[property="og:title"]')?.setAttribute('content', metadata.title)
+      document.querySelector('meta[property="og:description"]')?.setAttribute('content', metadata.description)
+    }
+    updateMetadata(readSiteLanguage())
+    const onLanguageChange = (event: Event) => {
+      const value = (event as CustomEvent<string>).detail?.toLowerCase()
+      if (value === 'en' || value === 'ar' || value === 'ru') updateMetadata(value)
+    }
+    window.addEventListener('site-language-change', onLanguageChange)
     const scrollToHash = () => {
       const id = window.location.hash.slice(1)
       if (!id) return
@@ -26,20 +43,14 @@ function App() {
     }
     scrollToHash()
     window.addEventListener('hashchange', scrollToHash)
-    return () => window.removeEventListener('hashchange', scrollToHash)
+    return () => {
+      window.removeEventListener('site-language-change', onLanguageChange)
+      window.removeEventListener('hashchange', scrollToHash)
+    }
   }, [])
 
   return (
     <div className="site-shell">
-      <Helmet>
-        <meta name="description" content="Premium Turkish children's clothing wholesale for boutiques, retailers and distributors worldwide. Explore our collections and request wholesale details." />
-        <meta name="keywords" content="wholesale children's clothing, kids clothing wholesale Turkey, Turkish children's clothing, children's fashion wholesale, kids dresses wholesale, wholesale kids fashion, children's clothing supplier Turkey, Istanbul kids clothing wholesale" />
-        <meta name="theme-color" content="#f7f5f0" />
-        <meta property="og:title" content={`${business.name} | Wholesale Children's Fashion from Turkey`} />
-        <meta property="og:description" content="Premium children's clothing for boutiques, retailers and distributors worldwide." />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=1200&q=85" />
-      </Helmet>
       <Navbar />
       {isCartPage ? <><CartPage /><Footer /></> : <>
       <main>

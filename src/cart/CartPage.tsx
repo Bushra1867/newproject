@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, ShoppingBag, Trash2 } from 'lucide-react'
 import { business, whatsappUrl } from '../config/business'
 import { readSiteLanguage, type SiteLanguage } from '../config/language'
 import { products } from '../data/products'
+import { translateColor, translateProduct } from '../data/productTranslations'
 import { sitePath } from '../config/navigation'
 import AddToCartDialog from './AddToCartDialog'
 import { useCart } from './useCart'
@@ -89,12 +90,13 @@ export default function CartPage() {
             {lines.map((line) => {
               const product = products.find((item) => item.modelCode === line.modelCode)
               if (!product) return null
+              const localizedProduct = translateProduct(product, language)
               const otherModelQuantity = lines.filter((other) => other.modelCode === line.modelCode && other.color !== line.color).reduce((sum, other) => sum + getLineQuantity(other), 0)
               return <article className="cart-line" key={`${line.modelCode}:${line.color}`}>
-                <img className="cart-line-image" src={product.image} alt={product.imageAlt} />
+                <img className="cart-line-image" src={product.image} alt={localizedProduct.imageAlt} />
                 <div className="cart-line-content">
-                  <div className="cart-line-heading"><div><span>{t.model} · {product.modelCode}</span><h2>{product.name}</h2></div><button type="button" className="cart-remove" onClick={() => removeLine(line.modelCode, line.color)} aria-label={`${t.remove}: ${product.modelCode}`}><Trash2 size={17} /> {t.remove}</button></div>
-                  <p className="cart-line-color">{t.color}: {line.color}</p>
+                  <div className="cart-line-heading"><div><span>{t.model} · <bdi dir="ltr">{product.modelCode}</bdi></span><h2>{localizedProduct.name}</h2></div><button type="button" className="cart-remove" onClick={() => removeLine(line.modelCode, line.color)} aria-label={`${t.remove}: ${product.modelCode}`}><Trash2 size={17} /> {t.remove}</button></div>
+                  <p className="cart-line-color">{t.color}: {translateColor(line.color, language)}</p>
                   <div className="cart-line-sizes"><strong>{t.sizes}</strong>{Object.entries(line.quantities).map(([size, quantity]) => <span key={size}>{formatSizeLabel(size, language)} <b>{quantity} {t.pieces}</b></span>)}</div>
                   <div className="cart-line-bottom"><span>{t.total}: <strong>{getLineQuantity(line)} {t.pieces}</strong></span><AddToCartDialog product={product} existing={line} otherModelQuantity={otherModelQuantity} onSave={(updated) => {
                     if (updated.color !== line.color) {

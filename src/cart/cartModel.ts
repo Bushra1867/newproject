@@ -1,5 +1,6 @@
 import type { Product } from '../data/products'
 import { products as productsCatalog } from '../data/products'
+import { translateColor, translateProduct } from '../data/productTranslations'
 
 export const CART_STORAGE_KEY = 'minik-wholesale-cart-v1'
 
@@ -56,9 +57,16 @@ export function formatSizeLabel(size: string, language: 'en' | 'ar' | 'ru') {
   if (!match) return size
   const count = Number(match[1])
   if (match[2].toLowerCase().startsWith('month')) {
-    return language === 'ar' ? `${count} أشهر` : language === 'ru' ? `${count} мес.` : `${count} months`
+    if (language === 'ar') {
+      const localizedCount = new Intl.NumberFormat('ar').format(count)
+      return count === 1 ? 'شهر' : count === 2 ? 'شهران' : `${localizedCount} أشهر`
+    }
+    return language === 'ru' ? `${count} мес.` : `${count} months`
   }
-  if (language === 'ar') return count === 1 ? `${count} سنة` : count === 2 ? `${count} سنتان` : `${count} سنوات`
+  if (language === 'ar') {
+    const localizedCount = new Intl.NumberFormat('ar').format(count)
+    return count === 1 ? 'سنة' : count === 2 ? 'سنتان' : `${localizedCount} سنوات`
+  }
   if (language === 'ru') {
     const lastTwoDigits = count % 100
     const lastDigit = count % 10
@@ -171,11 +179,12 @@ export function buildCartWhatsAppMessage(
   lines.forEach((line, index) => {
     const product = productsCatalog.find((item) => item.modelCode === line.modelCode)
     if (!product) return
+    const localizedProduct = translateProduct(product, language)
     const lineTotal = getLineQuantity(line)
     total += lineTotal
     messageLines.push(`${index + 1}. ${t.model}: ${product.modelCode}`)
-    messageLines.push(`${t.product}: ${product.name}`)
-    if (line.color) messageLines.push(`${t.color}: ${line.color}`)
+    messageLines.push(`${t.product}: ${localizedProduct.name}`)
+    if (line.color) messageLines.push(`${t.color}: ${translateColor(line.color, language)}`)
     messageLines.push(t.sizes)
     for (const [size, quantity] of Object.entries(line.quantities)) {
       if (validQuantity(quantity)) messageLines.push(`- ${formatSizeLabel(size, language)}: ${quantity} ${t.pieces}`)

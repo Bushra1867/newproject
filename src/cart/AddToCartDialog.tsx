@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { ShoppingBag, X } from 'lucide-react'
 import type { Product } from '../data/products'
 import { readSiteLanguage, type SiteLanguage } from '../config/language'
+import { translateColor, translateProduct } from '../data/productTranslations'
+import { formatSizeLabel } from './cartModel'
 import type { CartLine } from './cartModel'
 
 type Language = SiteLanguage
@@ -31,6 +33,7 @@ export default function AddToCartDialog({
   const [notes, setNotes] = useState(existing?.notes ?? '')
   const [error, setError] = useState('')
   const t = copy[language]
+  const localizedProduct = translateProduct(product, language)
   const colors = useMemo(() => product.colors.split(',').map((value) => value.trim()).filter(Boolean), [product.colors])
   const sizes = product.availableSizes ?? []
 
@@ -82,23 +85,23 @@ export default function AddToCartDialog({
 
   return (
     <>
-      <button type="button" className={`cart-add-trigger ${existing ? 'is-edit' : ''}`} onClick={open}>
+      <button type="button" className={`cart-add-trigger ${existing ? 'is-edit' : ''}`} onClick={open} aria-label={`${existing ? t.edit : t.add}: ${localizedProduct.name}`}>
         {existing ? t.edit : <><ShoppingBag size={16} aria-hidden="true" /> {t.add}</>}
       </button>
-      <dialog className="cart-config-dialog" ref={dialogRef} aria-label={`${t.title}: ${product.name}`} onClick={(event) => {
+      <dialog className="cart-config-dialog" ref={dialogRef} aria-label={`${t.title}: ${localizedProduct.name}`} onClick={(event) => {
         if (event.target === dialogRef.current) dialogRef.current?.close()
       }}>
         <form className="cart-config-content" onSubmit={save} dir={language === 'ar' ? 'rtl' : 'ltr'}>
           <header className="cart-config-header">
-            <div><span>{product.modelCode}</span><h2>{t.title}</h2><p>{product.name}</p></div>
+            <div><span dir="ltr">{product.modelCode}</span><h2>{t.title}</h2><p>{localizedProduct.name}</p></div>
             <button type="button" className="gallery-icon-button" onClick={() => dialogRef.current?.close()} aria-label={t.cancel}><X size={19} /></button>
           </header>
-          <label className="cart-config-field"><span>{t.color}</span><select value={color} onChange={(event) => setColor(event.target.value)}><option value="">{t.chooseColor}</option>{colors.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+          <label className="cart-config-field"><span>{t.color}</span><select value={color} onChange={(event) => setColor(event.target.value)}><option value="">{t.chooseColor}</option>{colors.map((item) => <option key={item} value={item}>{translateColor(item, language)}</option>)}</select></label>
           <div className="cart-size-table">
             <div className="cart-size-heading"><span>{t.size}</span><span>{t.quantity}</span></div>
             {sizes.map((size) => <label className="cart-size-row" key={size}>
-              <span>{size}</span>
-              <input type="number" min="0" max="1000000" step="1" inputMode="numeric" aria-label={`${t.quantity} · ${size}`} placeholder="0" value={quantities[size] ?? ''} onChange={(event) => setQuantities((current) => ({ ...current, [size]: event.target.value }))} />
+              <span>{formatSizeLabel(size, language)}</span>
+              <input dir="ltr" type="number" min="0" max="1000000" step="1" inputMode="numeric" aria-label={`${t.quantity} · ${formatSizeLabel(size, language)}`} placeholder="0" value={quantities[size] ?? ''} onChange={(event) => setQuantities((current) => ({ ...current, [size]: event.target.value }))} />
             </label>)}
           </div>
           {product.orderRule?.requireCompleteSizeSeries && <p className="cart-rule-note">{t.series}</p>}

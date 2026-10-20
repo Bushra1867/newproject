@@ -1,3 +1,5 @@
+import { readSiteLanguage } from './language'
+
 /** Replace these sample details with the wholesaler's real contact channels. */
 export const business = {
   name: 'Minik Studio',
@@ -16,8 +18,12 @@ export const business = {
 
 export const inquiryEndpoint = import.meta.env.VITE_INQUIRY_ENDPOINT?.trim() ?? ''
 
-export const wholesaleMessage = "Hello, I am interested in your wholesale children's clothing collection. Please send me your latest catalog and wholesale prices."
+const wholesaleMessages = {
+  en: "Hello, I am interested in your wholesale children's clothing collection. Please send me your latest catalog and wholesale prices.",
+  ar: 'مرحباً، أهتم بمجموعات ملابس الأطفال لديكم للبيع بالجملة. يرجى إرسال أحدث كتالوج وأسعار الجملة.',
+  ru: 'Здравствуйте! Меня интересуют ваши оптовые коллекции детской одежды. Пожалуйста, отправьте актуальный каталог и оптовые цены.',
+}
 
-export function whatsappUrl(message = wholesaleMessage) {
+export function whatsappUrl(message = wholesaleMessages[readSiteLanguage()]) {
   return `https://wa.me/${business.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`
 }
