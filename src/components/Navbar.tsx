@@ -1,65 +1,104 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { ArrowUpRight, Menu, ShoppingBag, X } from 'lucide-react'
+import { business } from '../config/business'
+import { sectionHref } from '../config/navigation'
+import SocialIcon from './SocialIcon'
+import WhatsAppButton from './WhatsAppButton'
+import { useCart } from '../cart/useCart'
 
-const links = [
-  { label: 'Home', href: '#home' },
-  { label: 'About', href: '#about' },
-  { label: 'Features', href: '#features' },
-  { label: 'Location', href: '#location' },
-  { label: 'Contact', href: '#contact' },
-]
+const navigation = {
+  EN: { home: 'Home', about: 'About us', collections: 'Collections', why: 'Why us', contact: 'Contact', inquiry: 'Request a quote', contactWhatsApp: 'Contact us on WhatsApp', language: 'Language' },
+  AR: { home: 'الرئيسية', about: 'من نحن', collections: 'المجموعة', why: 'لماذا نحن', contact: 'تواصل معنا', inquiry: 'اطلب عرض سعر', contactWhatsApp: 'تواصل معنا عبر واتساب', language: 'اللغة' },
+  RU: { home: 'Главная', about: 'О нас', collections: 'Коллекция', why: 'Почему мы', contact: 'Контакты', inquiry: 'Запросить предложение', contactWhatsApp: 'Связаться в WhatsApp', language: 'Язык' },
+}
 
-function Navbar() {
+export default function Navbar() {
+  const { pieceCount } = useCart()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [language, setLanguage] = useState(() => {
+    try {
+      const value = window.localStorage.getItem('minik-language')
+      return value === 'EN' || value === 'AR' || value === 'RU' ? value : 'EN'
+    } catch {
+      return 'EN'
+    }
+  })
+
+  const selectLanguage = (value: string) => {
+    setLanguage(value)
+    document.documentElement.lang = value.toLowerCase()
+    document.documentElement.dir = value === 'AR' ? 'rtl' : 'ltr'
+    try {
+      window.localStorage.setItem('minik-language', value)
+    } catch {
+      // Language selection still applies for this page when storage is unavailable.
+    }
+    window.dispatchEvent(new CustomEvent('site-language-change', { detail: value }))
+  }
+
+  useEffect(() => {
+    const syncLanguage = (event: Event) => {
+      const value = (event as CustomEvent<string>).detail
+      if (value === 'EN' || value === 'AR' || value === 'RU') setLanguage(value)
+    }
+    window.addEventListener('site-language-change', syncLanguage)
+    return () => window.removeEventListener('site-language-change', syncLanguage)
+  }, [])
+
+  useEffect(() => {
+    document.documentElement.lang = language.toLowerCase()
+    document.documentElement.dir = language === 'AR' ? 'rtl' : 'ltr'
+    window.dispatchEvent(new CustomEvent('site-language-change', { detail: language }))
+  }, [language])
 
   const closeMenu = () => setIsMenuOpen(false)
+  const text = navigation[language as keyof typeof navigation]
+  const links = [
+    { label: text.home, href: sectionHref('home') },
+    { label: text.about, href: sectionHref('about') },
+    { label: text.collections, href: sectionHref('collections') },
+    { label: text.why, href: sectionHref('why-us') },
+    { label: text.contact, href: sectionHref('contact') },
+  ]
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#10110f]/75 backdrop-blur-md">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10" aria-label="Main navigation">
-        <a href="#home" className="font-display text-2xl tracking-[0.28em] text-[#f6f0e4]" onClick={closeMenu}>
-          SAPORE
+    <header className="site-header">
+      <nav className="nav-wrap" aria-label="Main navigation">
+        <a className="brand-mark" href={sectionHref('home')} onClick={closeMenu} aria-label={`${business.name} home`}>
+          <span className="brand-symbol">m<span>.</span></span>
+          <span className="brand-name">{business.logo}<small>WHOLESALE · ISTANBUL</small></span>
         </a>
-
-        <div className="hidden items-center gap-8 lg:flex">
-          {links.map((link) => (
-            <a key={link.href} href={link.href} className="nav-link text-[0.68rem] font-medium uppercase tracking-[0.2em] text-[#e7e0d3]/75 transition-colors hover:text-[#d4ad6a]">
-              {link.label}
-            </a>
-          ))}
-          <a href="#contact" className="border border-[#c9a466] px-5 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#e7e0d3] transition-colors hover:bg-[#c9a466] hover:text-[#171713]">
-            Reserve a Table
+        <div className="desktop-nav">
+          {links.map((link) => <a key={link.href} href={link.href}>{link.label}</a>)}
+        </div>
+        <div className="nav-actions">
+          <label className="language-select">
+            <span className="sr-only">{text.language}</span>
+            <select value={language} onChange={(event) => selectLanguage(event.target.value)} aria-label="Choose language">
+              <option value="EN">EN</option>
+              <option value="AR">AR</option>
+              <option value="RU">RU</option>
+            </select>
+          </label>
+          {business.facebookUrl && <a className="nav-social-link" href={business.facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook"><SocialIcon network="facebook" size={16} /></a>}
+          {business.instagramUrl && <a className="nav-social-link" href={business.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><SocialIcon network="instagram" size={16} /></a>}
+          <a className={`nav-cart ${window.location.pathname.replace(/\/+$/, '') === '/cart' ? 'active' : ''}`} href="/cart" aria-label={`${language === 'AR' ? 'السلة' : language === 'RU' ? 'Корзина' : 'Cart'} · ${pieceCount} ${language === 'AR' ? 'قطعة' : language === 'RU' ? 'шт.' : 'pieces'}`} title={language === 'AR' ? 'السلة' : language === 'RU' ? 'Корзина' : 'Cart'}>
+            <ShoppingBag size={18} aria-hidden="true" /><span>{pieceCount}</span>
           </a>
+          <a className="nav-inquiry" href={sectionHref('inquiry')}>{text.inquiry}</a>
+          <WhatsAppButton className="nav-whatsapp">WhatsApp <ArrowUpRight size={15} aria-hidden="true" /></WhatsAppButton>
+          <button className="menu-toggle" type="button" aria-expanded={isMenuOpen} aria-controls="mobile-menu" aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'} onClick={() => setIsMenuOpen((open) => !open)}>
+            {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
-
-        <button
-          type="button"
-          className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 border border-white/20 lg:hidden"
-          aria-expanded={isMenuOpen}
-          aria-controls="mobile-menu"
-          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-          onClick={() => setIsMenuOpen((open) => !open)}
-        >
-          <span className="h-px w-5 bg-[#f6f0e4]" />
-          <span className="h-px w-5 bg-[#f6f0e4]" />
-        </button>
       </nav>
-
-      {isMenuOpen && (
-        <div id="mobile-menu" className="border-t border-white/10 bg-[#10110f] px-6 py-5 lg:hidden">
-          <div className="flex flex-col items-start gap-5">
-            {links.map((link) => (
-              <a key={link.href} href={link.href} onClick={closeMenu} className="text-xs uppercase tracking-[0.2em] text-[#e7e0d3]/80 hover:text-[#d4ad6a]">
-                {link.label}
-              </a>
-            ))}
-            <a href="#contact" onClick={closeMenu} className="w-full border border-[#c9a466] px-5 py-3 text-center text-xs font-semibold uppercase tracking-[0.16em] text-[#e7e0d3]">
-              Reserve a Table
-            </a>
-          </div>
-        </div>
-      )}
+      <div className="mobile-menu" id="mobile-menu" hidden={!isMenuOpen} inert={!isMenuOpen}>
+        {links.map((link) => <a key={link.href} href={link.href} onClick={closeMenu}>{link.label}<ArrowUpRight size={15} /></a>)}
+        <a href={sectionHref('inquiry')} onClick={closeMenu}>{text.inquiry}<ArrowUpRight size={15} /></a>
+        <a href="/cart" onClick={closeMenu}><ShoppingBag size={16} /> {language === 'AR' ? 'السلة' : language === 'RU' ? 'Корзина' : 'Cart'} · {pieceCount}</a>
+        <WhatsAppButton className="mobile-menu-cta" onClick={closeMenu}>{text.contactWhatsApp}</WhatsAppButton>
+        <p>{text.language}: {['EN', 'AR', 'RU'].map((item) => <button key={item} type="button" className={language === item ? 'active-language' : ''} onClick={() => selectLanguage(item)}>{item}</button>)}</p>
+      </div>
     </header>
   )
 }
-
-export default Navbar

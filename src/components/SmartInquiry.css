@@ -1,0 +1,280 @@
+.smart-inquiry-section {
+  padding: 96px 0;
+  background: #f0eee8;
+  color: var(--ink);
+}
+
+.smart-inquiry {
+  max-width: 980px;
+  padding: clamp(22px, 5vw, 56px);
+  border: 1px solid #deded7;
+  background: #fbfaf7;
+  box-shadow: 0 18px 60px rgba(38, 43, 40, .06);
+}
+
+.smart-inquiry-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.smart-inquiry-heading h2 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(38px, 5vw, 56px);
+  font-weight: 500;
+  line-height: 1.08;
+}
+
+.smart-inquiry-heading > div > p:last-child {
+  max-width: 620px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.smart-language select,
+.smart-field input,
+.smart-field select,
+.smart-field textarea,
+.smart-search input {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid #d9dad3;
+  border-radius: 0;
+  background: #fff;
+  color: var(--ink);
+}
+
+.smart-language select {
+  width: auto;
+  min-width: 132px;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+.smart-progress {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 38px 0;
+  border-block: 1px solid var(--line);
+}
+
+.smart-progress-step {
+  position: relative;
+  display: flex;
+  min-height: 78px;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 8px;
+  color: #8a8d86;
+}
+
+.smart-progress-step:not(:last-child)::after {
+  position: absolute;
+  inset-inline-end: 0;
+  width: 1px;
+  height: 30px;
+  background: var(--line);
+  content: '';
+}
+
+.smart-progress-step > span {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  place-items: center;
+  border: 1px solid #d9dad3;
+  border-radius: 50%;
+  font-size: 12px;
+}
+
+.smart-progress-step small {
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.smart-progress-step.is-active { color: var(--green-dark); }
+.smart-progress-step.is-active > span { border-color: var(--green); color: var(--green); }
+.smart-progress-step.is-complete > span { background: var(--green); color: white; }
+
+.smart-step h3 {
+  margin: 0 0 8px;
+  font-family: var(--serif);
+  font-size: 29px;
+  font-weight: 500;
+}
+
+.smart-hint {
+  margin: 0 0 22px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.smart-fields-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.smart-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+  color: #525a53;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.smart-field > span b { color: #ad6351; }
+.smart-field input::placeholder,
+.smart-field textarea::placeholder,
+.smart-search input::placeholder { color: #9b9e98; }
+.smart-field textarea { min-height: 130px; resize: vertical; }
+
+.smart-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.smart-choice,
+.smart-mode label {
+  display: flex;
+  min-height: 54px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  border: 1px solid #deded7;
+  background: white;
+  color: #525a53;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1.5;
+  transition: border-color .18s ease, background .18s ease;
+}
+
+.smart-choice.selected,
+.smart-mode label.selected,
+.smart-product.selected {
+  border-color: var(--green);
+  background: #f4f7f3;
+}
+
+.smart-choice input,
+.smart-mode input { accent-color: var(--green); }
+
+.smart-mode {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 22px 0;
+  padding: 0;
+  border: 0;
+}
+
+.smart-mode label {
+  min-height: 44px;
+  padding: 9px 14px;
+}
+
+.smart-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+  color: var(--muted);
+}
+
+.smart-search > svg { position: absolute; inset-inline-start: 14px; }
+.smart-search input { padding-inline-start: 42px; }
+
+.smart-product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.smart-product {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr);
+  min-width: 0;
+  border: 1px solid #deded7;
+  background: #fff;
+}
+
+.smart-product > img {
+  width: 100px;
+  height: 100%;
+  min-height: 160px;
+  object-fit: cover;
+}
+
+.smart-product-content { padding: 13px; }
+.smart-model { color: var(--green); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+.smart-product-content h4 { margin: 5px 0 8px; font-family: var(--serif); font-size: 16px; font-weight: 500; }
+.smart-product-content p, .smart-selected-item > span { color: var(--muted); font-size: 10px; line-height: 1.5; }
+.smart-small-button { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; padding: 7px 9px; border: 1px solid #d9dad3; background: transparent; color: var(--green-dark); cursor: pointer; font-size: 10px; }
+.smart-small-button.remove { color: #8d5147; }
+
+.smart-selected-products { margin-top: 27px; }
+.smart-selected-products > h4, .smart-selected-item > strong { font-size: 12px; }
+.smart-selected-item { display: grid; gap: 8px; padding: 16px 0; border-top: 1px solid var(--line); }
+.smart-selected-item .smart-fields-grid { padding-top: 8px; }
+
+.smart-review-heading { margin-top: 38px !important; }
+.smart-review {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.smart-review article { min-width: 0; padding: 16px; background: white; }
+.smart-review h4 { margin: 0 0 8px; color: var(--green-dark); font-size: 11px; }
+.smart-review p { margin: 0; color: #646a63; font-size: 12px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+.smart-message { margin-bottom: 15px; }
+.smart-form-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 30px; }
+.smart-button { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 9px; padding: 0 20px; border: 1px solid transparent; cursor: pointer; font-size: 12px; font-weight: 700; }
+.smart-button.primary { background: var(--green); color: white; }
+.smart-button.primary:hover { background: var(--green-dark); }
+.smart-button.secondary { border-color: #d9dad3; background: transparent; color: #50574f; }
+.smart-button.whatsapp { border-color: #5f8f70; background: #edf5ee; color: #315e40; }
+.smart-button:disabled { opacity: .65; cursor: wait; }
+.smart-message-error, .smart-message-success { margin: 20px 0 0; padding: 12px 15px; font-size: 12px; line-height: 1.6; }
+.smart-message-error { border: 1px solid #e4c7c0; background: #fcf3f0; color: #8c493c; }
+.smart-message-success { border: 1px solid #c6dccb; background: #f0f7f1; color: #315e40; }
+.smart-follow-note { margin: 20px 0 0; color: var(--muted); font-size: 12px; text-align: center; }
+
+[dir="rtl"] .smart-search > svg { inset-inline-start: auto; inset-inline-end: 14px; }
+[dir="rtl"] .smart-search input { padding-inline: 42px 14px; }
+
+@media (max-width: 700px) {
+  .smart-inquiry-section { padding: 60px 0; }
+  .smart-inquiry { width: calc(100% - 28px); padding: 22px 16px; }
+  .smart-inquiry-heading { gap: 12px; }
+  .smart-language select { min-width: 92px; padding: 9px 6px; font-size: 11px; }
+  .smart-progress { margin: 25px 0; }
+  .smart-progress-step { min-height: 68px; flex-direction: column; justify-content: center; gap: 5px; padding: 8px 3px; text-align: center; }
+  .smart-progress-step > span { width: 26px; height: 26px; flex-basis: 26px; }
+  .smart-progress-step small { max-width: 72px; font-size: 8px; }
+  .smart-step h3 { font-size: 25px; }
+  .smart-fields-grid, .smart-choice-grid, .smart-product-grid, .smart-review { grid-template-columns: 1fr; }
+  .smart-product { grid-template-columns: 88px minmax(0, 1fr); }
+  .smart-product > img { width: 88px; }
+  .smart-form-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .smart-form-actions .smart-button { width: 100%; padding-inline: 10px; }
+  .smart-review article { padding: 13px; }
+}
+
+@media (max-width: 380px) {
+  .smart-progress-step small { font-size: 7px; }
+  .smart-progress-step { padding-inline: 1px; }
+  .smart-form-actions { grid-template-columns: 1fr; }
+}
