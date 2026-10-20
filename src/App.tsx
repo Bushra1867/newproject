@@ -8,9 +8,10 @@ import SmartInquiry from './components/SmartInquiry'
 import { About, Collections, Benefits, Process, Wholesale, Social, Contact, Footer } from './components/WholesaleSections'
 import CartPage from './cart/CartPage'
 import './cart/cart.css'
+import { currentRoutePath } from './config/navigation'
 
 function App() {
-  const isCartPage = window.location.pathname.replace(/\/+$/, '') === '/cart'
+  const isCartPage = currentRoutePath() === '/cart'
 
   useEffect(() => {
     const scrollToHash = () => {

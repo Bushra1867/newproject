@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ArrowUpRight, Menu, ShoppingBag, X } from 'lucide-react'
 import { business } from '../config/business'
-import { sectionHref } from '../config/navigation'
+import { currentRoutePath, sectionHref, sitePath } from '../config/navigation'
 import SocialIcon from './SocialIcon'
 import WhatsAppButton from './WhatsAppButton'
 import { useCart } from '../cart/useCart'
@@ -82,7 +82,7 @@ export default function Navbar() {
           </label>
           {business.facebookUrl && <a className="nav-social-link" href={business.facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook"><SocialIcon network="facebook" size={16} /></a>}
           {business.instagramUrl && <a className="nav-social-link" href={business.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><SocialIcon network="instagram" size={16} /></a>}
-          <a className={`nav-cart ${window.location.pathname.replace(/\/+$/, '') === '/cart' ? 'active' : ''}`} href="/cart" aria-label={`${language === 'AR' ? 'السلة' : language === 'RU' ? 'Корзина' : 'Cart'} · ${pieceCount} ${language === 'AR' ? 'قطعة' : language === 'RU' ? 'шт.' : 'pieces'}`} title={language === 'AR' ? 'السلة' : language === 'RU' ? 'Корзина' : 'Cart'}>
+          <a className={`nav-cart ${currentRoutePath() === '/cart' ? 'active' : ''}`} href={sitePath('cart')} aria-label={`${language === 'AR' ? 'السلة' : language === 'RU' ? 'Корзина' : 'Cart'} · ${pieceCount} ${language === 'AR' ? 'قطعة' : language === 'RU' ? 'шт.' : 'pieces'}`} title={language === 'AR' ? 'السلة' : language === 'RU' ? 'Корзина' : 'Cart'}>
             <ShoppingBag size={18} aria-hidden="true" /><span>{pieceCount}</span>
           </a>
           <a className="nav-inquiry" href={sectionHref('inquiry')}>{text.inquiry}</a>
@@ -95,7 +95,7 @@ export default function Navbar() {
       <div className="mobile-menu" id="mobile-menu" hidden={!isMenuOpen} inert={!isMenuOpen}>
         {links.map((link) => <a key={link.href} href={link.href} onClick={closeMenu}>{link.label}<ArrowUpRight size={15} /></a>)}
         <a href={sectionHref('inquiry')} onClick={closeMenu}>{text.inquiry}<ArrowUpRight size={15} /></a>
-        <a href="/cart" onClick={closeMenu}><ShoppingBag size={16} /> {language === 'AR' ? 'السلة' : language === 'RU' ? 'Корзина' : 'Cart'} · {pieceCount}</a>
+        <a href={sitePath('cart')} onClick={closeMenu}><ShoppingBag size={16} /> {language === 'AR' ? 'السلة' : language === 'RU' ? 'Корзина' : 'Cart'} · {pieceCount}</a>
         <WhatsAppButton className="mobile-menu-cta" onClick={closeMenu}>{text.contactWhatsApp}</WhatsAppButton>
         <p>{text.language}: {['EN', 'AR', 'RU'].map((item) => <button key={item} type="button" className={language === item ? 'active-language' : ''} onClick={() => selectLanguage(item)}>{item}</button>)}</p>
       </div>

@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, ShoppingBag, Trash2 } from 'lucide-react'
 import { business, whatsappUrl } from '../config/business'
 import { readSiteLanguage, type SiteLanguage } from '../config/language'
 import { products } from '../data/products'
+import { sitePath } from '../config/navigation'
 import AddToCartDialog from './AddToCartDialog'
 import { useCart } from './useCart'
 import { buildCartWhatsAppMessage, formatSizeLabel, getCartQuantity, getLineQuantity, validateCart, type CartIssue } from './cartModel'
@@ -76,12 +77,12 @@ export default function CartPage() {
       <div className="page-width">
         <header className="cart-page-header">
           <div><p className="eyebrow"><span className="eyebrow-line" /> {business.name}</p><h1>{t.title}</h1><p>{t.subtitle}</p></div>
-          <a className="button button-secondary" href="/#collections"><ArrowLeft size={16} /> {t.continue}</a>
+          <a className="button button-secondary" href={`${sitePath()}#collections`}><ArrowLeft size={16} /> {t.continue}</a>
         </header>
         {restorationIssues.length > 0 && <div className="cart-notice" role="status"><p>{t.stale}</p><ul>{restorationIssues.map((issue, index) => <li key={`${issue.modelCode}-${issue.reason}-${index}`}>{issue.modelCode}: {issueText(issue, language)}</li>)}</ul><button type="button" onClick={dismissRestorationIssues}>×</button></div>}
         {storageUnavailable && <p className="cart-notice" role="status">{t.unavailable}</p>}
         {lines.length === 0 ? <section className="cart-empty">
-          <span><ShoppingBag size={27} /></span><h2>{t.empty}</h2><p>{t.emptyText}</p><a className="smart-button primary" href="/#collections">{t.browse} <ArrowRight size={17} /></a>
+          <span><ShoppingBag size={27} /></span><h2>{t.empty}</h2><p>{t.emptyText}</p><a className="smart-button primary" href={`${sitePath()}#collections`}>{t.browse} <ArrowRight size={17} /></a>
         </section> : <>
           {invalidIssues.length > 0 && <div className="cart-validation" role="alert"><p>{t.invalid}</p><ul>{invalidIssues.map((issue, index) => <li key={`${issue.modelCode}-${issue.reason}-${index}`}>{issue.modelCode}: {issueText(issue, language)}</li>)}</ul></div>}
           <div className="cart-items">
@@ -117,9 +118,9 @@ export default function CartPage() {
             </div>
             <div className="cart-summary-actions"><button type="button" className="button button-secondary" onClick={() => {
               if (window.confirm(t.clearConfirm)) clearCart()
-            }}>{t.clear}</button><a className="button button-secondary" href="/#collections">{t.continue}</a>{orderUrl ? <a className="button button-whatsapp" href={orderUrl} target="_blank" rel="noopener noreferrer">{t.send}</a> : <button className="button button-whatsapp" type="button" disabled>{t.send}</button>}</div>
+            }}>{t.clear}</button><a className="button button-secondary" href={`${sitePath()}#collections`}>{t.continue}</a>{orderUrl ? <a className="button button-whatsapp" href={orderUrl} target="_blank" rel="noopener noreferrer">{t.send}</a> : <button className="button button-whatsapp" type="button" disabled>{t.send}</button>}</div>
           </section>
-          <a className="cart-inquiry-link" href="/?fromCart=1#inquiry">{language === 'ar' ? 'متابعة إلى نموذج الاستفسار الذكي' : language === 'ru' ? 'Продолжить в форме оптового запроса' : 'Continue in the smart inquiry form'} <ArrowRight size={16} /></a>
+          <a className="cart-inquiry-link" href={`${sitePath()}?fromCart=1#inquiry`}>{language === 'ar' ? 'متابعة إلى نموذج الاستفسار الذكي' : language === 'ru' ? 'Продолжить в форме оптового запроса' : 'Continue in the smart inquiry form'} <ArrowRight size={16} /></a>
         </>}
       </div>
     </main>

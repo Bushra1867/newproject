@@ -54,6 +54,12 @@ npm run dev
 
 Run `npm run build` to type-check and create a production build, or `npm run lint` to run ESLint.
 
+This is a React/TypeScript application, so opening the source `index.html` directly with `file://` is not supported. The source entry uses TSX modules that Vite must transform. Use the development server for local work, or the production build/deployment for static hosting.
+
+## GitHub Pages deployment
+
+The site is deployed to `https://bushra1867.github.io/newproject/`. Vite's `base` in `vite.config.ts` must match the repository path (`/newproject/`). A GitHub Actions workflow builds the app and deploys the generated `dist` directory; the repository root source files are not a deployable static build. The workflow also publishes a `404.html` fallback so client-side routes such as the wholesale cart can load on GitHub Pages.
+
 ## Business contact and social configuration
 
 Update `src/config/business.ts`:
