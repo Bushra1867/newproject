@@ -11,6 +11,7 @@ The shared design tokens, responsive layouts, multilingual typography, and reduc
 - These Google Fonts are distributed under the SIL Open Font License. Google Fonts is preconnected in `index.html`; fonts are loaded from its CDN.
 - Main color tokens are `--color-background: #F7F5F0`, `--color-surface: #FFFFFF`, `--color-text: #282720`, `--color-text-secondary: #706B62`, `--color-border: #E5E0D7`, `--color-accent: #8A765E`, and `--color-button-primary: #292820`.
 - Semantic display/page/section/product/body/metadata/label/button/validation type tokens, line heights, spacing, content width, product image ratio, corners, shadows, and motion tokens are defined alongside the colors in `src/editorial.css`.
+- The current campaign and catalog visuals are illustrative Unsplash lifestyle photography, not verified photos of Minik Studio products. The collection note labels this clearly in English, Arabic, and Russian. Replace the image URLs in `src/data/products.ts` and the campaign image URLs in `src/index.css` and `src/components/WholesaleSections.tsx` when authentic product photography is available.
 
 The responsive header changes to compact menu navigation at tablet widths, catalog columns adapt to available space, the inquiry progress labels simplify on narrow screens, and the product gallery respects mobile safe areas. The project was browser-checked at the specified viewport widths (320, 360, 375, 390, 430, 600, 768, 820, 1024, 1280, 1366, 1440, 1600, and 1920 px) in English, Arabic, and Russian for horizontal document overflow on the home and cart pages.
 
@@ -51,6 +52,8 @@ The cart's **Continue in the smart inquiry form** action transfers models, color
 npm install
 npm run dev
 ```
+
+Open the local URL printed by Vite (by default, `http://localhost:5173/`). Development serves the app from `/`; production builds use `/newproject/` for the configured GitHub Pages repository path.
 
 Run `npm run build` to type-check and create a production build, or `npm run lint` to run ESLint.
 
